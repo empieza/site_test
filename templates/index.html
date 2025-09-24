@@ -1,1 +1,314 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bot Constructor - Вход через Telegram</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            max-width: 500px;
+            width: 90%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .login-section {
+            text-align: center;
+        }
+        
+        .telegram-login-button {
+            display: inline-block;
+            background: #0088cc;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 10px 0;
+            transition: background 0.3s;
+        }
+        
+        .telegram-login-button:hover {
+            background: #0077b3;
+        }
+        
+        .or-divider {
+            margin: 20px 0;
+            position: relative;
+            text-align: center;
+            color: #666;
+        }
+        
+        .or-divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #ddd;
+        }
+        
+        .or-divider span {
+            background: white;
+            padding: 0 15px;
+            position: relative;
+        }
+        
+        .test-login {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 10px 0;
+            width: 100%;
+            transition: background 0.3s;
+        }
+        
+        .test-login:hover {
+            background: #5a6268;
+        }
+        
+        .features {
+            margin-top: 30px;
+            text-align: left;
+        }
+        
+        .feature {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .feature-icon {
+            font-size: 1.5em;
+            margin-right: 15px;
+            width: 40px;
+            text-align: center;
+        }
+        
+        .instructions {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+            font-size: 0.9em;
+        }
+        
+        .webapp-info {
+            display: none;
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 Bot Constructor</h1>
+            <p>Создавайте Telegram ботов через Telegram</p>
+        </div>
+        
+        <div class="content">
+            <div class="login-section">
+                <h2>Вход в систему</h2>
+                <p>Выберите способ входа:</p>
+                
+                <!-- Telegram Login Widget -->
+                <script async src="https://telegram.org/js/telegram-widget.js?22" 
+                    data-telegram-login="bot_constructor_bot" 
+                    data-size="large" 
+                    data-onauth="onTelegramAuth(user)" 
+                    data-request-access="write"
+                    data-userpic="true"></script>
+                
+                <div class="or-divider">
+                    <span>ИЛИ</span>
+                </div>
+                
+                <!-- Тестовый вход -->
+                <button class="test-login" onclick="testLogin()">
+                    🧪 Тестовый вход (для разработки)
+                </button>
+                
+                <!-- Инструкция -->
+                <div class="instructions">
+                    <strong>💡 Как использовать:</strong><br>
+                    1. Нажмите кнопку "Login via Telegram"<br>
+                    2. Разрешите доступ вашему аккаунту<br>
+                    3. Вы автоматически войдете в систему
+                </div>
+                
+                <!-- Информация о WebApp -->
+                <div id="webapp-info" class="webapp-info">
+                    <strong>📱 Telegram WebApp обнаружен!</strong><br>
+                    Вы можете использовать бота прямо в Telegram
+                </div>
+            </div>
+            
+            <div class="features">
+                <h3>Преимущества входа через Telegram:</h3>
+                <div class="feature">
+                    <div class="feature-icon">🔒</div>
+                    <div>Безопасная аутентификация</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">⚡</div>
+                    <div>Мгновенный вход в 1 клик</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🤖</div>
+                    <div>Интеграция с Telegram ботами</div>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <script>
+        // Проверяем, открыто ли в Telegram WebApp
+        if (window.Telegram && Telegram.WebApp) {
+            document.getElementById('webapp-info').style.display = 'block';
+            Telegram.WebApp.ready();
+            Telegram.WebApp.expand();
+        }
+        
+        // Обработка аутентификации через Telegram
+        function onTelegramAuth(user) {
+            console.log('Telegram auth success:', user);
+            
+            // Отправляем данные на сервер
+            fetch('/telegram_login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    id: user.id,
+                    first_name: user.first_name,
+                    last_name: user.last_name,
+                    username: user.username,
+                    photo_url: user.photo_url,
+                    auth_date: user.auth_date,
+                    hash: user.hash
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Если в WebApp - закрываем и открываем дашборд
+                    if (window.Telegram && Telegram.WebApp) {
+                        Telegram.WebApp.close();
+                    } else {
+                        window.location.href = '/dashboard';
+                    }
+                } else {
+                    alert('Ошибка входа: ' + (data.error || 'Неизвестная ошибка'));
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+                alert('Ошибка соединения с сервером');
+            });
+        }
+        
+        // Тестовый вход
+        function testLogin() {
+            const testUser = {
+                id: Math.floor(Math.random() * 1000000),
+                first_name: 'Тестовый',
+                last_name: 'Пользователь',
+                username: 'test_user_' + Math.floor(Math.random() * 1000)
+            };
+            
+            fetch('/telegram_login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(testUser)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = '/dashboard';
+                } else {
+                    alert('Ошибка тестового входа');
+                }
+            });
+        }
+        
+        // Автоматический вход при наличии initData от WebApp
+        function checkWebAppInitData() {
+            if (window.Telegram && Telegram.WebApp) {
+                const initData = Telegram.WebApp.initData;
+                if (initData) {
+                    console.log('WebApp initData found, attempting auto-login');
+                    
+                    fetch('/webapp_login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ initData: initData })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            console.log('Auto-login successful');
+                            // Можно автоматически перенаправить или обновить интерфейс
+                        }
+                    });
+                }
+            }
+        }
+        
+        // Проверяем initData при загрузке
+        document.addEventListener('DOMContentLoaded', checkWebAppInitData);
+    </script>
+</body>
+</html>
